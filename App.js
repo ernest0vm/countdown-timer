@@ -1,10 +1,11 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
-import useTimer from './src/utils/timer';
+import {useTimer} from './src/utils/timer';
 import clockify from './src/utils/clockify';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SingletonHooksContainer} from 'react-singleton-hook';
 
 const Screen1 = ({navigation}) => {
   const {start, pause, reset, stop, secondsLeft} = useTimer();
@@ -60,15 +61,18 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <SafeAreaProvider style={{flex: 1}}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home1">
-          <Stack.Screen name="Home1" component={Screen1} />
-          <Stack.Screen name="Home2" component={Screen2} />
-          <Stack.Screen name="Home3" component={Screen3} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <>
+      <SingletonHooksContainer />
+      <SafeAreaProvider style={{flex: 1}}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home1">
+            <Stack.Screen name="Home1" component={Screen1} />
+            <Stack.Screen name="Home2" component={Screen2} />
+            <Stack.Screen name="Home3" component={Screen3} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </>
   );
 };
 

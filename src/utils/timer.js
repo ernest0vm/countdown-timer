@@ -1,7 +1,8 @@
 import {useState, useEffect} from 'react';
 import BackgroundTimer from 'react-native-background-timer';
+import {singletonHook} from 'react-singleton-hook';
 
-const useTimer = () => {
+const useTimerImpl = () => {
   const [secondsLeft, setSecondsLeft] = useState(3601);
   const [timerOn, setTimerOn] = useState(false);
 
@@ -66,4 +67,4 @@ const useTimer = () => {
   return {start, pause, reset, stop, timerIsActive, secondsLeft};
 };
 
-export default useTimer;
+export const useTimer = singletonHook({loading: true}, useTimerImpl);
