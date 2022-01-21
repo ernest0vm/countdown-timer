@@ -5,10 +5,16 @@ const clockify = secondsLeft => {
   let displayHours = hours < 10 ? `0${hours}` : hours;
   let displayMins = mins < 10 ? `0${mins}` : mins;
   let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
+  let displayHMS = `${displayHours}:${displayMins}:${displaySecs}`;
+  let displayHM = `${displayHours}:${displayMins}`;
+  let displayMS = `${displayMins}:${displaySecs}`;
   return {
     displayHours,
     displayMins,
     displaySecs,
+    displayHMS,
+    displayHM,
+    displayMS,
   };
 };
 

@@ -12,13 +12,15 @@ const Screen1 = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{secondsLeft}</Text>
-      <Button title="Start" onPress={() => start()} />
-      <Button title="Pause" onPress={() => pause()} />
-      <Button title="Reset" onPress={() => reset()} />
-      <Button title="Stop" onPress={() => stop()} />
+      <Text style={styles.time}>{clockify(secondsLeft).displayMS}</Text>
+      <View style={styles.controlRow}>
+        <Button title="Start" onPress={() => start()} />
+        <Button title="Pause" onPress={() => pause()} />
+        <Button title="Reset" onPress={() => reset()} />
+        <Button title="Stop" onPress={() => stop()} />
+      </View>
       <Button
-        title="next Screen"
+        title="Next Screen"
         onPress={() => navigation.navigate('Home2')}
       />
     </View>
@@ -30,13 +32,15 @@ const Screen2 = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{secondsLeft}</Text>
-      <Button title="Start" onPress={() => start()} />
-      <Button title="Pause" onPress={() => pause()} />
-      <Button title="Reset" onPress={() => reset()} />
-      <Button title="Stop" onPress={() => stop()} />
+      <Text style={styles.time}>{clockify(secondsLeft).displayMS}</Text>
+      <View style={styles.controlRow}>
+        <Button title="Start" onPress={() => start()} />
+        <Button title="Pause" onPress={() => pause()} />
+        <Button title="Reset" onPress={() => reset()} />
+        <Button title="Stop" onPress={() => stop()} />
+      </View>
       <Button
-        title="next Screen"
+        title="Next Screen"
         onPress={() => navigation.navigate('Home3')}
       />
     </View>
@@ -47,12 +51,14 @@ const Screen3 = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{secondsLeft}</Text>
-      <Button title="Start" onPress={() => start()} />
-      <Button title="Pause" onPress={() => pause()} />
-      <Button title="Reset" onPress={() => reset()} />
-      <Button title="Stop" onPress={() => stop()} />
-      <Button title="first Screen" onPress={() => navigation.popToTop()} />
+      <Text style={styles.time}>{clockify(secondsLeft).displayMS}</Text>
+      <View style={styles.controlRow}>
+        <Button title="Start" onPress={() => start()} />
+        <Button title="Pause" onPress={() => pause()} />
+        <Button title="Reset" onPress={() => reset()} />
+        <Button title="Stop" onPress={() => stop()} />
+      </View>
+      <Button title="First Screen" onPress={() => navigation.popToTop()} />
     </View>
   );
 };
@@ -65,7 +71,14 @@ const App = () => {
       <SingletonHooksContainer />
       <SafeAreaProvider style={{flex: 1}}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home1">
+          <Stack.Navigator
+            initialRouteName="Home1"
+            screenOptions={{
+              headerTintColor: 'white',
+              headerStyle: {
+                backgroundColor: 'black',
+              },
+            }}>
             <Stack.Screen name="Home1" component={Screen1} />
             <Stack.Screen name="Home2" component={Screen2} />
             <Stack.Screen name="Home3" component={Screen3} />
@@ -88,6 +101,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 30,
     textAlign: 'center',
+  },
+  controlRow: {
+    flexDirection: 'row',
+    alignContent: 'space-around',
   },
 });
 

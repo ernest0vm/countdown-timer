@@ -3,7 +3,8 @@ import BackgroundTimer from 'react-native-background-timer';
 import {singletonHook} from 'react-singleton-hook';
 
 const useTimerImpl = () => {
-  const [secondsLeft, setSecondsLeft] = useState(3601);
+  const remainSeconds = 100;
+  const [secondsLeft, setSecondsLeft] = useState(remainSeconds);
   const [timerOn, setTimerOn] = useState(false);
 
   /// Runs when timerOn value changes to start or stop timer
@@ -57,7 +58,7 @@ const useTimerImpl = () => {
   }
 
   function reset() {
-    setSecondsLeft(3601);
+    setSecondsLeft(remainSeconds);
   }
 
   function timerIsActive() {
