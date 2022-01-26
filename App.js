@@ -1,24 +1,33 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
-import {useTimer} from './src/utils/timer';
+import {configTimer, useTimer} from './src/utils/timer';
 import clockify from './src/utils/clockify';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {SingletonHooksContainer} from 'react-singleton-hook';
 
-const Screen1 = ({navigation}) => {
-  const {start, pause, reset, stop, secondsLeft} = useTimer();
+const Countdown = () => {
+  const {start, pause, reset, stop, isFinished, secondsLeft} = useTimer();
+  return (
+    <View>
+      <Text style={styles.time}>{clockify(secondsLeft).displayMS}</Text>
+      <Text style={styles.time}>{`isFinished: ${isFinished}`}</Text>
+      <View style={styles.controlRow}>
+        <Button title="Start" onPress={start} />
+        <Button title="Pause" onPress={pause} />
+        <Button title="Reset" onPress={reset} />
+        <Button title="Stop" onPress={stop} />
+      </View>
+    </View>
+  );
+};
 
+const Screen1 = ({navigation}) => {
+  configTimer(500, true);
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{clockify(secondsLeft).displayMS}</Text>
-      <View style={styles.controlRow}>
-        <Button title="Start" onPress={() => start()} />
-        <Button title="Pause" onPress={() => pause()} />
-        <Button title="Reset" onPress={() => reset()} />
-        <Button title="Stop" onPress={() => stop()} />
-      </View>
+      <Countdown />
       <Button
         title="Next Screen"
         onPress={() => navigation.navigate('Home2')}
@@ -28,17 +37,9 @@ const Screen1 = ({navigation}) => {
 };
 
 const Screen2 = ({navigation}) => {
-  const {start, pause, reset, stop, secondsLeft} = useTimer();
-
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{clockify(secondsLeft).displayMS}</Text>
-      <View style={styles.controlRow}>
-        <Button title="Start" onPress={() => start()} />
-        <Button title="Pause" onPress={() => pause()} />
-        <Button title="Reset" onPress={() => reset()} />
-        <Button title="Stop" onPress={() => stop()} />
-      </View>
+      <Countdown />
       <Button
         title="Next Screen"
         onPress={() => navigation.navigate('Home3')}
@@ -47,17 +48,9 @@ const Screen2 = ({navigation}) => {
   );
 };
 const Screen3 = ({navigation}) => {
-  const {start, pause, reset, stop, secondsLeft} = useTimer();
-
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{clockify(secondsLeft).displayMS}</Text>
-      <View style={styles.controlRow}>
-        <Button title="Start" onPress={() => start()} />
-        <Button title="Pause" onPress={() => pause()} />
-        <Button title="Reset" onPress={() => reset()} />
-        <Button title="Stop" onPress={() => stop()} />
-      </View>
+      <Countdown />
       <Button title="First Screen" onPress={() => navigation.popToTop()} />
     </View>
   );

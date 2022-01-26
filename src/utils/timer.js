@@ -1,16 +1,34 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import BackgroundTimer from 'react-native-background-timer';
 import {singletonHook} from 'react-singleton-hook';
 
+let config = {};
+const initState = {
+  start: () => {},
+  pause: () => {},
+  reset: () => {},
+  stop: () => {},
+  isActive: false,
+  isFinished: false,
+  secondsLeft: 0,
+};
+
+export const configTimer = (seconds, autostart) => {
+  config = {
+    seconds,
+    autostart,
+  };
+};
+
 const useTimerImpl = () => {
-  const remainSeconds = 100;
-  const [secondsLeft, setSecondsLeft] = useState(remainSeconds);
+  const {seconds, autostart} = config;
+  const [secondsLeft, setSecondsLeft] = useState(seconds);
   const [timerOn, setTimerOn] = useState(false);
 
   /// Runs when timerOn value changes to start or stop timer
   //   useEffect(() => {
   //     if (timerOn) {
-  //       startTimer();
+  //       initTimer();
   //     } else {
   //       BackgroundTimer.stopBackgroundTimer();
   //     }
@@ -22,50 +40,62 @@ const useTimerImpl = () => {
   /// Checks if secondsLeft = 0 and stop timer if so
   useEffect(() => {
     if (secondsLeft === 0) {
-      BackgroundTimer.stopBackgroundTimer();
+      stop();
     }
-  }, [secondsLeft]);
+  }, [secondsLeft, stop]);
 
-  const startTimer = () => {
+  /// Init countdown automatically
+  useEffect(() => {
+    if (autostart) {
+      start();
+    } else {
+      pause();
+    }
+  }, [autostart, start, pause]);
+
+  const initTimer = () => {
     BackgroundTimer.runBackgroundTimer(() => {
       setSecondsLeft(secs => {
-        console.log(secs);
         if (secs > 0) {
           return secs - 1;
-        } else {
-          return 0;
         }
+
+        return 0;
       });
     }, 1000);
   };
 
-  function start() {
+  const start = useCallback(() => {
     if (!timerOn) {
       setTimerOn(true);
-      startTimer();
+      initTimer();
     }
-  }
+  }, [timerOn]);
 
-  function pause() {
+  const pause = useCallback(() => {
     setTimerOn(false);
     BackgroundTimer.stopBackgroundTimer();
-  }
+  }, [setTimerOn]);
 
-  function stop() {
+  const stop = useCallback(() => {
     setSecondsLeft(0);
     setTimerOn(false);
     BackgroundTimer.stopBackgroundTimer();
-  }
+  }, [setTimerOn]);
 
-  function reset() {
-    setSecondsLeft(remainSeconds);
-  }
+  const reset = useCallback(() => {
+    setSecondsLeft(100);
+  }, []);
 
-  function timerIsActive() {
-    return timerOn;
-  }
-
-  return {start, pause, reset, stop, timerIsActive, secondsLeft};
+  return {
+    start,
+    pause,
+    reset,
+    stop,
+    isActive: timerOn,
+    isFinished: secondsLeft === 0,
+    secondsLeft,
+  };
 };
 
-export const useTimer = singletonHook({loading: true}, useTimerImpl);
+export const useTimer = singletonHook(initState, useTimerImpl);
